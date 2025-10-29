@@ -1,16 +1,33 @@
+import LottoShop from './LottoShop.js';
 import DEFAULT_VALUES from '../consts/defaultValues.js';
 import ERROR_MESSAGES from '../consts/errorMessages.js';
 
 class Customer {
   #balance;
 
+  #ownedLottos;
+
   constructor(balance) {
     this.#validateBalance(balance);
     this.#balance = balance;
+    this.#ownedLottos = [];
   }
 
   get balance() {
     return this.#balance;
+  }
+
+  get ownedLottos() {
+    return this.#ownedLottos;
+  }
+
+  buyLotto() {
+    if (this.#balance < DEFAULT_VALUES.DOMAIN.LOTTO_PRICE) return false;
+
+    this.#balance -= DEFAULT_VALUES.DOMAIN.LOTTO_PRICE;
+    this.#ownedLottos.push(LottoShop.makeLotto());
+
+    return true;
   }
 
   /**
