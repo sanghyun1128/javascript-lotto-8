@@ -30,6 +30,13 @@ export default [
       'max-lines-per-function': ['error', { max: 15, skipBlankLines: true, skipComments: true }],
     },
   },
+  // 테스트 파일에서는 max-lines-per-function 규칙을 비활성화
+  {
+    files: ['**/__tests__/**'],
+    rules: {
+      'max-lines-per-function': 'off',
+    },
+  },
   {
     files: ['eslint.config.js'],
     rules: {
