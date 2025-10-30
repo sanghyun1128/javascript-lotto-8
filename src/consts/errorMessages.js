@@ -16,6 +16,11 @@ const ERROR_MESSAGES = {
     NO_OWNED_LOTTO: '보유한 로또가 없습니다.',
     MUST_CHECK_RESULTS: '수익률을 계산하려면 먼저 결과를 확인해야 합니다.',
   },
+  IO: {
+    NO_INPUT: '입력 값이 없습니다.',
+    MUST_INPUT_NUMBER: '숫자를 입력해야 합니다.',
+    MUST_INPUT_INTEGER: '정수를 입력해야 합니다.',
+  },
   ETC: {
     UNKNOWN: '알 수 없는 오류가 발생했습니다.',
   },
