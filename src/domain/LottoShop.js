@@ -9,13 +9,27 @@ class LottoShop {
 
   #bonusNumber;
 
-  constructor(winningNumbers, bonusNumber) {
+  constructor() {
+    this.#winningNumbers = undefined;
+    this.#bonusNumber = undefined;
+  }
+
+  set winningNumbers(winningNumbers) {
     LottoShop.#validateLottoNumbersLength(winningNumbers.length);
     winningNumbers.forEach((number) => LottoShop.#validateLottoNumberRange(number));
-    LottoShop.#validateLottoNumberRange(bonusNumber);
-    LottoShop.#validateNoDuplicates([bonusNumber, ...winningNumbers]);
+
+    if (this.#bonusNumber !== undefined)
+      LottoShop.#validateNoDuplicates([this.#bonusNumber, ...winningNumbers]);
 
     this.#winningNumbers = winningNumbers;
+  }
+
+  set bonusNumber(bonusNumber) {
+    LottoShop.#validateLottoNumberRange(bonusNumber);
+
+    if (this.#winningNumbers !== undefined)
+      LottoShop.#validateNoDuplicates([bonusNumber, ...this.#winningNumbers]);
+
     this.#bonusNumber = bonusNumber;
   }
 
