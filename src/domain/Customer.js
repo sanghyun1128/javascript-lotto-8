@@ -1,4 +1,3 @@
-import LottoShop from './LottoShop.js';
 import DEFAULT_VALUES from '../consts/defaultValues.js';
 import ERROR_MESSAGES from '../consts/errorMessages.js';
 
@@ -7,10 +6,13 @@ class Customer {
 
   #ownedLottos;
 
+  #lottoResults;
+
   constructor(balance) {
-    this.#validateBalance(balance);
+    Customer.#validateBalance(balance);
     this.#balance = balance;
     this.#ownedLottos = [];
+    this.#lottoResults = [];
   }
 
   get balance() {
@@ -21,13 +23,21 @@ class Customer {
     return this.#ownedLottos;
   }
 
-  buyLotto() {
-    if (this.#balance < DEFAULT_VALUES.DOMAIN.LOTTO_PRICE) return false;
+  get lottoResults() {
+    return this.#lottoResults;
+  }
 
-    this.#balance -= DEFAULT_VALUES.DOMAIN.LOTTO_PRICE;
-    this.#ownedLottos.push(LottoShop.makeLotto());
+  addLotto(lotto) {
+    this.#ownedLottos.push(lotto);
+  }
 
-    return true;
+  payMoney(amount) {
+    this.#balance -= amount;
+  }
+
+  checkLottoResults(LottoShop) {
+    const results = this.#ownedLottos.map((lotto) => LottoShop.evaluateLotto(lotto));
+    results.forEach((result) => this.#lottoResults.push(result));
   }
 
   /**
@@ -40,7 +50,7 @@ class Customer {
    * @param {number} balance - 검사할 잔액
    * @throws {Error} 유효성 검사 실패 시
    */
-  #validateBalance(balance) {
+  static #validateBalance(balance) {
     if (balance < 0) throw new Error(ERROR_MESSAGES.BALANCE.MUST_POSITIVE);
     if (balance % DEFAULT_VALUES.DOMAIN.BALANCE_UNIT !== 0)
       throw new Error(ERROR_MESSAGES.BALANCE.MUST_MULTIPLE_OF_UNIT);
