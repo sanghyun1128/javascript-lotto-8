@@ -33,6 +33,45 @@ class LottoShop {
     this.#bonusNumber = bonusNumber;
   }
 
+  evaluateLotto(lotto) {
+    LottoShop.#validateEvaluationReady(this.#winningNumbers, this.#bonusNumber);
+
+    const rank = this.#calculateRank(lotto.numbers);
+    const prize = LottoShop.#calculatePrize(rank);
+
+    return {
+      rank,
+      prize,
+    };
+  }
+
+  #calculateRank(lottoNumbers) {
+    const match = lottoNumbers.filter((n) => this.#winningNumbers.includes(n)).length;
+    const bonusMatch = lottoNumbers.includes(this.#bonusNumber);
+    if (match === 6) return 1;
+    if (match === 5 && bonusMatch) return 2;
+    if (match === 5) return 3;
+    if (match === 4) return 4;
+    if (match === 3) return 5;
+    return 0;
+  }
+
+  static #calculatePrize(rank) {
+    const prizeByRank = {
+      1: DEFAULT_VALUES.PRIZE.FIRST,
+      2: DEFAULT_VALUES.PRIZE.SECOND,
+      3: DEFAULT_VALUES.PRIZE.THIRD,
+      4: DEFAULT_VALUES.PRIZE.FOURTH,
+      5: DEFAULT_VALUES.PRIZE.FIFTH,
+    };
+    return prizeByRank[rank] ?? DEFAULT_VALUES.PRIZE.LAST_PLACE;
+  }
+
+  static #validateEvaluationReady(winningNumbers, bonusNumber) {
+    if (winningNumbers === undefined || bonusNumber === undefined)
+      throw new Error(ERROR_MESSAGES.LOTTO.EVALUATION_NOT_READY);
+  }
+
   static #validateLottoNumbersLength(length) {
     if (length !== DEFAULT_VALUES.DOMAIN.LOTTO_NUMBER_COUNT)
       throw new Error(ERROR_MESSAGES.LOTTO.WINNING_NUMBERS_LENGTH);
