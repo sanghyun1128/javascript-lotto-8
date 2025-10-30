@@ -40,6 +40,16 @@ class Customer {
     results.forEach((result) => this.#lottoResults.push(result));
   }
 
+  calculateYield() {
+    Customer.#validateCalculateYieldReady(this.#ownedLottos, this.#lottoResults);
+    const profit = this.#lottoResults.reduce((acc, cur) => acc + cur.prize, 0);
+    const cost = this.#ownedLottos.length * DEFAULT_VALUES.DOMAIN.LOTTO_PRICE;
+
+    const yieldValue = (profit / cost) * 100;
+    const factor = 10 ** DEFAULT_VALUES.FORMAT.ROUNDING_DECIMAL_PLACES;
+    return Math.round(yieldValue * factor) / factor;
+  }
+
   /**
    * 잔액 유효성 검사
    * - 음수인지 검사
@@ -54,6 +64,12 @@ class Customer {
     if (balance < 0) throw new Error(ERROR_MESSAGES.BALANCE.MUST_POSITIVE);
     if (balance % DEFAULT_VALUES.DOMAIN.BALANCE_UNIT !== 0)
       throw new Error(ERROR_MESSAGES.BALANCE.MUST_MULTIPLE_OF_UNIT);
+  }
+
+  static #validateCalculateYieldReady(ownedLottos, lottoResults) {
+    if (ownedLottos.length === 0) throw new Error(ERROR_MESSAGES.LOTTO.NO_OWNED_LOTTO);
+    if (lottoResults.length === 0) throw new Error(ERROR_MESSAGES.LOTTO.MUST_CHECK_RESULTS);
+    if (lottoResults.length !== ownedLottos.length) throw new Error(ERROR_MESSAGES.ETC.UNKNOWN);
   }
 }
 
