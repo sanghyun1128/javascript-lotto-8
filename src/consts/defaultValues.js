@@ -14,6 +14,9 @@ const DEFAULT_VALUES = {
     FIFTH: 5000,
     LAST_PLACE: 0,
   },
+  FORMAT: {
+    ROUNDING_DECIMAL_PLACES: 2,
+  },
 };
 
 export default DEFAULT_VALUES;

@@ -11,6 +11,11 @@ const ERROR_MESSAGES = {
     DUPLICATE_NUMBERS: '당첨 번호 끼리 겹치면 안됩니다.',
     EVALUATION_NOT_READY: '당첨 번호와 보너스 번호가 모두 입력되어 있어야 합니다.',
     IS_NOT_SOLD: '판매한 로또가 아닙니다.',
+    NO_OWNED_LOTTO: '보유한 로또가 없습니다.',
+    MUST_CHECK_RESULTS: '수익률을 계산하려면 먼저 결과를 확인해야 합니다.',
+  },
+  ETC: {
+    UNKNOWN: '알 수 없는 오류가 발생했습니다.',
   },
 };
 
