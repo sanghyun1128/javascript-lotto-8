@@ -28,10 +28,14 @@ describe('당첨, 보너스 번호 저장 테스트', () => {
   test('겹치는 값이 있는 경우 에러 발생', () => {
     const winningNumbers = [2, 1, 3, 5, 6, 4];
     const bonusNumber = 1;
+    const shop = new LottoShop();
 
-    expect(() => new LottoShop(winningNumbers, bonusNumber)).toThrow(
-      ERROR_MESSAGES.LOTTO.DUPLICATE_NUMBERS,
-    );
+    expect(() => {
+      shop.winningNumbers = winningNumbers;
+    }).not.toThrow();
+    expect(() => {
+      shop.bonusNumber = bonusNumber;
+    }).toThrow(ERROR_MESSAGES.LOTTO.DUPLICATE_NUMBERS);
   });
 
   test.each([
@@ -43,11 +47,11 @@ describe('당첨, 보너스 번호 저장 테스트', () => {
     for (; i < DEFAULT_VALUES.DOMAIN.LOTTO_NUMBER_COUNT + 1; i += 1) {
       winningNumbers.push(i + 10);
     }
-    const bonusNumber = i;
+    const shop = new LottoShop();
 
-    expect(() => new LottoShop(winningNumbers, bonusNumber)).toThrow(
-      ERROR_MESSAGES.LOTTO.WINNING_NUMBERS_LENGTH,
-    );
+    expect(() => {
+      shop.winningNumbers = winningNumbers;
+    }).toThrow(ERROR_MESSAGES.LOTTO.WINNING_NUMBERS_LENGTH);
   });
 
   test('당첨번호의 갯수가 정확할 경우 정상 처리', () => {
@@ -56,28 +60,32 @@ describe('당첨, 보너스 번호 저장 테스트', () => {
     for (; i < DEFAULT_VALUES.DOMAIN.LOTTO_NUMBER_COUNT; i += 1) {
       winningNumbers.push(i + 10);
     }
-    const bonusNumber = i;
+    const shop = new LottoShop();
 
-    expect(() => new LottoShop(winningNumbers, bonusNumber)).not.toThrow();
+    expect(() => {
+      shop.winningNumbers = winningNumbers;
+    }).not.toThrow();
   });
 
   test.each([
     [DEFAULT_VALUES.DOMAIN.MAX_LOTTO_VALUE + 1],
     [DEFAULT_VALUES.DOMAIN.MIN_LOTTO_VALUE - 1],
   ])('값이 범위를 벗어날 경우 에러 발생', (bonusNumber) => {
-    const winningNumbers = [2, 1, 3, 5, 6, 4];
+    const shop = new LottoShop();
 
-    expect(() => new LottoShop(winningNumbers, bonusNumber)).toThrow(
-      ERROR_MESSAGES.LOTTO.NUMBER_RANGE,
-    );
+    expect(() => {
+      shop.bonusNumber = bonusNumber;
+    }).toThrow(ERROR_MESSAGES.LOTTO.NUMBER_RANGE);
   });
 
   test.each([[DEFAULT_VALUES.DOMAIN.MAX_LOTTO_VALUE], [DEFAULT_VALUES.DOMAIN.MIN_LOTTO_VALUE]])(
     '경계값일 경우 정상 처리',
     (bonusNumber) => {
-      const winningNumbers = [2, 11, 3, 5, 6, 4];
+      const shop = new LottoShop();
 
-      expect(() => new LottoShop(winningNumbers, bonusNumber)).not.toThrow();
+      expect(() => {
+        shop.bonusNumber = bonusNumber;
+      }).not.toThrow();
     },
   );
 });
