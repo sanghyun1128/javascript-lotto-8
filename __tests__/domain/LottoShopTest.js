@@ -3,6 +3,8 @@ import { MissionUtils } from '@woowacourse/mission-utils';
 import LottoShop from '../../src/domain/LottoShop.js';
 import ERROR_MESSAGES from '../../src/consts/errorMessages.js';
 import DEFAULT_VALUES from '../../src/consts/defaultValues.js';
+import Customer from '../../src/domain/Customer.js';
+import Lotto from '../../src/domain/Lotto.js';
 
 const mockRandoms = (numbers) => {
   MissionUtils.Random.pickUniqueNumbersInRange = jest.fn();
@@ -12,15 +14,42 @@ const mockRandoms = (numbers) => {
   );
 };
 
-describe('로또 발행 테스트', () => {
-  test('랜덤 값이 정렬 되는지 확인', () => {
+describe('로또 판매 테스트', () => {
+  test('판매시 판매 목록에 저장되는지 확인', () => {
+    const randomResult = [2, 1, 3, 5, 6, 4];
+
+    const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
+    const shop = new LottoShop();
+    mockRandoms([randomResult]);
+    shop.buyLotto(customer);
+
+    expect(shop.soldLottos[0]).toEqual(customer.ownedLottos[0]);
+  });
+
+  test('판매한 로또의 숫자 순서가 정렬되는지 확인', () => {
     const randomResult = [2, 1, 3, 5, 6, 4];
     const output = [1, 2, 3, 4, 5, 6];
 
+    const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
+    const shop = new LottoShop();
     mockRandoms([randomResult]);
-    const lotto = LottoShop.makeLotto();
+    shop.buyLotto(customer);
 
-    expect(lotto.numbers).toEqual(output);
+    expect(shop.soldLottos[0].numbers).toEqual(output);
+  });
+
+  test('고객 잔액 부족시 구매 실패', () => {
+    const randomResult = [2, 1, 3, 5, 6, 4];
+
+    const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
+    const shop = new LottoShop();
+    mockRandoms([randomResult, randomResult]);
+    const result1 = shop.buyLotto(customer);
+    const result2 = shop.buyLotto(customer);
+
+    expect(result1).toBeTruthy();
+    expect(result2).toBeFalsy();
+    expect(shop.soldLottos.length).toBe(1);
   });
 });
 
@@ -99,9 +128,11 @@ describe('로또 등수, 당첨금 확인 테스트', () => {
     [[1, 2, 3, 13, 12, 11], [1, 2, 3, 4, 5, 6], 7, 5, DEFAULT_VALUES.PRIZE.FIFTH],
     [[1, 2, 14, 13, 12, 11], [1, 2, 3, 4, 5, 6], 7, 0, DEFAULT_VALUES.PRIZE.LAST_PLACE],
   ])('등수, 당첨금 결정 확인', (lottoNumbers, winningNumbers, bonusNumber, rank, prize) => {
-    mockRandoms([lottoNumbers]);
-    const lotto = LottoShop.makeLotto();
+    const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
     const shop = new LottoShop();
+    mockRandoms([lottoNumbers]);
+    shop.buyLotto(customer);
+    const lotto = customer.ownedLottos[0];
     shop.winningNumbers = winningNumbers;
     shop.bonusNumber = bonusNumber;
 
@@ -113,11 +144,13 @@ describe('로또 등수, 당첨금 확인 테스트', () => {
     const lottoNumbers = [1, 2, 3, 4, 5, 6];
     const bonusNumber = 7;
 
-    mockRandoms([lottoNumbers]);
-    const lotto = LottoShop.makeLotto();
+    const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
     const shop = new LottoShop();
+    mockRandoms([lottoNumbers]);
+    shop.buyLotto(customer);
     shop.bonusNumber = bonusNumber;
 
+    const lotto = customer.ownedLottos[0];
     expect(() => {
       shop.evaluateLotto(lotto);
     }).toThrow(ERROR_MESSAGES.LOTTO.EVALUATION_NOT_READY);
@@ -127,13 +160,30 @@ describe('로또 등수, 당첨금 확인 테스트', () => {
     const lottoNumbers = [1, 2, 3, 4, 5, 6];
     const winningNumbers = [2, 1, 3, 5, 6, 4];
 
-    mockRandoms([lottoNumbers]);
-    const lotto = LottoShop.makeLotto();
+    const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
     const shop = new LottoShop();
+    mockRandoms([lottoNumbers]);
+    shop.buyLotto(customer);
     shop.winningNumbers = winningNumbers;
 
+    const lotto = customer.ownedLottos[0];
     expect(() => {
       shop.evaluateLotto(lotto);
     }).toThrow(ERROR_MESSAGES.LOTTO.EVALUATION_NOT_READY);
+  });
+
+  test('판매되지 않은 로또 이면 에러 발생', () => {
+    const lottoNumbers = [1, 2, 3, 4, 5, 6];
+    const winningNumbers = [2, 1, 3, 5, 6, 4];
+    const bonusNumber = 7;
+
+    const shop = new LottoShop();
+    shop.winningNumbers = winningNumbers;
+    shop.bonusNumber = bonusNumber;
+
+    const lotto = new Lotto(lottoNumbers);
+    expect(() => {
+      shop.evaluateLotto(lotto);
+    }).toThrow(ERROR_MESSAGES.LOTTO.IS_NOT_SOLD);
   });
 });
