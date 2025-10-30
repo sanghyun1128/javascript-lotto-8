@@ -9,6 +9,7 @@ const ERROR_MESSAGES = {
     NUMBER_RANGE: `로또의 번호는 ${DEFAULT_VALUES.DOMAIN.MIN_LOTTO_VALUE}-${DEFAULT_VALUES.DOMAIN.MAX_LOTTO_VALUE} 사이어야 합니다`,
     WINNING_NUMBERS_LENGTH: `당첨 번호의 갯수는 ${DEFAULT_VALUES.DOMAIN.LOTTO_NUMBER_COUNT}개 이어야 합니다.`,
     DUPLICATE_NUMBERS: '당첨 번호 끼리 겹치면 안됩니다.',
+    EVALUATION_NOT_READY: '당첨 번호와 보너스 번호가 모두 입력되어 있어야 합니다.',
   },
 };
 
