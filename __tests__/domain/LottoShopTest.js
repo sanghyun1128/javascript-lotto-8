@@ -121,24 +121,27 @@ describe('당첨, 보너스 번호 저장 테스트', () => {
 
 describe('로또 등수, 당첨금 확인 테스트', () => {
   test.each([
-    [[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], 7, 1, DEFAULT_VALUES.PRIZE.FIRST],
-    [[1, 2, 3, 4, 5, 7], [1, 2, 3, 4, 5, 6], 7, 2, DEFAULT_VALUES.PRIZE.SECOND],
-    [[1, 2, 3, 4, 5, 11], [1, 2, 3, 4, 5, 6], 7, 3, DEFAULT_VALUES.PRIZE.THIRD],
-    [[1, 2, 3, 4, 12, 11], [1, 2, 3, 4, 5, 6], 7, 4, DEFAULT_VALUES.PRIZE.FOURTH],
-    [[1, 2, 3, 13, 12, 11], [1, 2, 3, 4, 5, 6], 7, 5, DEFAULT_VALUES.PRIZE.FIFTH],
-    [[1, 2, 14, 13, 12, 11], [1, 2, 3, 4, 5, 6], 7, 0, DEFAULT_VALUES.PRIZE.LAST_PLACE],
-  ])('등수, 당첨금 결정 확인', (lottoNumbers, winningNumbers, bonusNumber, rank, prize) => {
-    const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
-    const shop = new LottoShop();
-    mockRandoms([lottoNumbers]);
-    shop.buyLotto(customer);
-    const lotto = customer.ownedLottos[0];
-    shop.winningNumbers = winningNumbers;
-    shop.bonusNumber = bonusNumber;
+    [[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], 7, 6, false, DEFAULT_VALUES.PRIZE.FIRST],
+    [[1, 2, 3, 4, 5, 7], [1, 2, 3, 4, 5, 6], 7, 5, true, DEFAULT_VALUES.PRIZE.SECOND],
+    [[1, 2, 3, 4, 5, 11], [1, 2, 3, 4, 5, 6], 7, 5, false, DEFAULT_VALUES.PRIZE.THIRD],
+    [[1, 2, 3, 4, 12, 11], [1, 2, 3, 4, 5, 6], 7, 4, false, DEFAULT_VALUES.PRIZE.FOURTH],
+    [[1, 2, 3, 13, 12, 11], [1, 2, 3, 4, 5, 6], 7, 3, false, DEFAULT_VALUES.PRIZE.FIFTH],
+    [[1, 2, 14, 13, 12, 11], [1, 2, 3, 4, 5, 6], 7, 2, false, DEFAULT_VALUES.PRIZE.LAST_PLACE],
+  ])(
+    '등수, 당첨금 결정 확인',
+    (lottoNumbers, winningNumbers, bonusNumber, matchCount, bonusMatch, prize) => {
+      const customer = new Customer(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
+      const shop = new LottoShop();
+      mockRandoms([lottoNumbers]);
+      shop.buyLotto(customer);
+      const lotto = customer.ownedLottos[0];
+      shop.winningNumbers = winningNumbers;
+      shop.bonusNumber = bonusNumber;
 
-    const result = shop.evaluateLotto(lotto);
-    expect(result).toEqual({ rank, prize });
-  });
+      const result = shop.evaluateLotto(lotto);
+      expect(result).toEqual({ match: matchCount, bonus: bonusMatch, prize });
+    },
+  );
 
   test('당첨번호가 입력되지 않았으면 에러 발생', () => {
     const lottoNumbers = [1, 2, 3, 4, 5, 6];

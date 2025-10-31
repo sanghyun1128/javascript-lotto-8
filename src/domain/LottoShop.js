@@ -68,35 +68,32 @@ class LottoShop {
     LottoShop.#validateSoldLotto(lotto, this.#soldLottos);
     LottoShop.#validateEvaluationReady(this.#winningNumbers, this.#bonusNumber);
 
-    const rank = this.#calculateRank(lotto.numbers);
-    const prize = LottoShop.#calculatePrize(rank);
+    const matchCount = this.#calculateMatchCount(lotto.numbers);
+    const bonusMatch = this.#calculateBonusMatch(lotto.numbers);
+    const prize = LottoShop.#calculatePrize(matchCount, bonusMatch);
 
     return {
-      rank,
+      match: matchCount,
+      bonus: bonusMatch,
       prize,
     };
   }
 
-  #calculateRank(lottoNumbers) {
-    const match = lottoNumbers.filter((n) => this.#winningNumbers.includes(n)).length;
-    const bonusMatch = lottoNumbers.includes(this.#bonusNumber);
-    if (match === 6) return 1;
-    if (match === 5 && bonusMatch) return 2;
-    if (match === 5) return 3;
-    if (match === 4) return 4;
-    if (match === 3) return 5;
-    return 0;
+  #calculateMatchCount(lottoNumbers) {
+    return lottoNumbers.filter((n) => this.#winningNumbers.includes(n)).length;
   }
 
-  static #calculatePrize(rank) {
-    const prizeByRank = {
-      1: DEFAULT_VALUES.PRIZE.FIRST,
-      2: DEFAULT_VALUES.PRIZE.SECOND,
-      3: DEFAULT_VALUES.PRIZE.THIRD,
-      4: DEFAULT_VALUES.PRIZE.FOURTH,
-      5: DEFAULT_VALUES.PRIZE.FIFTH,
-    };
-    return prizeByRank[rank] ?? DEFAULT_VALUES.PRIZE.LAST_PLACE;
+  #calculateBonusMatch(lottoNumbers) {
+    return lottoNumbers.includes(this.#bonusNumber);
+  }
+
+  static #calculatePrize(matchCount, bonusMatch) {
+    if (matchCount === 6) return DEFAULT_VALUES.PRIZE.FIRST;
+    if (matchCount === 5 && bonusMatch) return DEFAULT_VALUES.PRIZE.SECOND;
+    if (matchCount === 5) return DEFAULT_VALUES.PRIZE.THIRD;
+    if (matchCount === 4) return DEFAULT_VALUES.PRIZE.FOURTH;
+    if (matchCount === 3) return DEFAULT_VALUES.PRIZE.FIFTH;
+    return DEFAULT_VALUES.PRIZE.LAST_PLACE;
   }
 
   static #validateSoldLotto(lotto, soldLottos) {
