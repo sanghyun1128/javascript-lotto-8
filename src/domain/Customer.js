@@ -12,7 +12,14 @@ class Customer {
     Customer.#validateBalance(balance);
     this.#balance = balance;
     this.#ownedLottos = [];
-    this.#lottoResults = [];
+    this.#lottoResults = {
+      first: { match: 6, bonus: false, prize: DEFAULT_VALUES.PRIZE.FIRST, count: 0 },
+      second: { match: 5, bonus: true, prize: DEFAULT_VALUES.PRIZE.SECOND, count: 0 },
+      third: { match: 5, bonus: false, prize: DEFAULT_VALUES.PRIZE.THIRD, count: 0 },
+      fourth: { match: 4, bonus: false, prize: DEFAULT_VALUES.PRIZE.FOURTH, count: 0 },
+      fifth: { match: 3, bonus: false, prize: DEFAULT_VALUES.PRIZE.FIFTH, count: 0 },
+      last: { match: 0, bonus: false, prize: DEFAULT_VALUES.PRIZE.LAST_PLACE, count: 0 },
+    };
   }
 
   get balance() {
@@ -37,12 +44,23 @@ class Customer {
 
   checkLottoResults(LottoShop) {
     const results = this.#ownedLottos.map((lotto) => LottoShop.evaluateLotto(lotto));
-    results.forEach((result) => this.#lottoResults.push(result));
+
+    results.forEach((result) => {
+      if (result.match === 6) this.#lottoResults.first.count += 1;
+      else if (result.match === 5 && result.bonus) this.#lottoResults.second.count += 1;
+      else if (result.match === 5) this.#lottoResults.third.count += 1;
+      else if (result.match === 4) this.#lottoResults.fourth.count += 1;
+      else if (result.match === 3) this.#lottoResults.fifth.count += 1;
+      else this.#lottoResults.last.count += 1;
+    });
   }
 
   calculateYield() {
     Customer.#validateCalculateYieldReady(this.#ownedLottos, this.#lottoResults);
-    const profit = this.#lottoResults.reduce((acc, cur) => acc + cur.prize, 0);
+    const profit = Object.values(this.#lottoResults).reduce(
+      (acc, result) => acc + result.prize * result.count,
+      0,
+    );
     const cost = this.#ownedLottos.length * DEFAULT_VALUES.DOMAIN.LOTTO_PRICE;
 
     const yieldValue = (profit / cost) * 100;
@@ -67,9 +85,12 @@ class Customer {
   }
 
   static #validateCalculateYieldReady(ownedLottos, lottoResults) {
-    if (ownedLottos.length === 0) throw new Error(ERROR_MESSAGES.LOTTO.NO_OWNED_LOTTO);
-    if (lottoResults.length === 0) throw new Error(ERROR_MESSAGES.LOTTO.MUST_CHECK_RESULTS);
-    if (lottoResults.length !== ownedLottos.length) throw new Error(ERROR_MESSAGES.ETC.UNKNOWN);
+    const lottoCount = ownedLottos.length;
+    const resultCount = Object.values(lottoResults).reduce((acc, result) => acc + result.count, 0);
+
+    if (lottoCount === 0) throw new Error(ERROR_MESSAGES.LOTTO.NO_OWNED_LOTTO);
+    if (resultCount === 0) throw new Error(ERROR_MESSAGES.LOTTO.MUST_CHECK_RESULTS);
+    if (lottoCount !== resultCount) throw new Error(ERROR_MESSAGES.ETC.UNKNOWN);
   }
 }
 
