@@ -1,6 +1,7 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 
 import MESSAGES from '../consts/messages.js';
+import ERROR_MESSAGES from '../consts/errorMessages.js';
 
 class OutputManager {
   static printRequestBalance() {
@@ -40,6 +41,10 @@ class OutputManager {
 
   static printYield(yieldValue) {
     MissionUtils.Console.print(MESSAGES.INFO.YIELD(yieldValue));
+  }
+
+  static applyErrorMessageFormat(errorMessage) {
+    return `${ERROR_MESSAGES.PREFIX}${errorMessage}`;
   }
 }
 
