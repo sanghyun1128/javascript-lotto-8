@@ -26,7 +26,7 @@ class InputManager {
     if (integer === undefined || integer === null || integer.length === 0)
       throw new Error(ERROR_MESSAGES.IO.NO_INPUT);
     if (Number.isNaN(+integer)) throw new Error(ERROR_MESSAGES.IO.MUST_INPUT_NUMBER);
-    if (!Number.isSafeInteger(integer)) throw new Error(ERROR_MESSAGES.IO.MUST_INPUT_INTEGER);
+    if (!Number.isSafeInteger(+integer)) throw new Error(ERROR_MESSAGES.IO.MUST_INPUT_INTEGER);
   }
 }
 
