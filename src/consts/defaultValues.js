@@ -16,7 +16,7 @@ const DEFAULT_VALUES = {
   },
   FORMAT: {
     SEPARATOR: ',',
-    ROUNDING_DECIMAL_PLACES: 2,
+    ROUNDING_DECIMAL_PLACES: 1,
   },
 };
 
