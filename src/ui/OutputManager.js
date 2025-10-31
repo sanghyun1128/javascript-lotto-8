@@ -28,7 +28,7 @@ class OutputManager {
 
   static printResultHeader() {
     MissionUtils.Console.print(MESSAGES.RESULT.HEADER);
-    MissionUtils.Console.print(MESSAGES.RESULT.DIVIDER);
+    MissionUtils.Console.print(MESSAGES.RESULT.SEPARATOR);
   }
 
   static printResult(result) {
@@ -41,6 +41,10 @@ class OutputManager {
 
   static printYield(yieldValue) {
     MissionUtils.Console.print(MESSAGES.INFO.YIELD(yieldValue));
+  }
+
+  static printEmptyLine() {
+    MissionUtils.Console.print('');
   }
 
   static applyErrorMessageFormat(errorMessage) {
