@@ -20,7 +20,7 @@ const MESSAGES = {
     RANK: (match, prize, count) =>
       `${match}개 일치 (${MESSAGES.INFO.KR_FORMAT_CURRENCY(prize)}) - ${count}개`,
     BONUS_RANK: (match, prize, count) =>
-      `${match}개 일치, 보너스 볼 일치 (${MESSAGES.INFO.KR_FORMAT_CURRENCY(prize)}}) - ${count}개`,
+      `${match}개 일치, 보너스 볼 일치 (${MESSAGES.INFO.KR_FORMAT_CURRENCY(prize)}) - ${count}개`,
   },
 };
 
