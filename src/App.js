@@ -16,8 +16,7 @@ class App {
       await this.#controller.requestBonusNumber();
       this.#controller.checkResultsAndPrint();
     } catch (error) {
-      error.message = OutputManager.applyErrorMessageFormat(error.message);
-      throw error;
+      OutputManager.printErrorMessage(error.message);
     }
   }
 }

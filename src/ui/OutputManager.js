@@ -47,8 +47,8 @@ class OutputManager {
     MissionUtils.Console.print('');
   }
 
-  static applyErrorMessageFormat(errorMessage) {
-    return `${ERROR_MESSAGES.PREFIX}${errorMessage}`;
+  static printErrorMessage(errorMessage) {
+    MissionUtils.Console.print(`${ERROR_MESSAGES.PREFIX}${errorMessage}`);
   }
 }
 
