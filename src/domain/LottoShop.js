@@ -2,7 +2,7 @@ import { MissionUtils } from '@woowacourse/mission-utils';
 
 import Lotto from './Lotto.js';
 import DEFAULT_VALUES from '../consts/defaultValues.js';
-import ERROR_MESSAGES from '../consts/errorMessages.js';
+import Validation from '../utils/Validation.js';
 
 class LottoShop {
   #winningNumbers;
@@ -22,20 +22,20 @@ class LottoShop {
   }
 
   set winningNumbers(winningNumbers) {
-    LottoShop.#validateLottoNumbersLength(winningNumbers.length);
-    winningNumbers.forEach((number) => LottoShop.#validateLottoNumberRange(number));
+    Validation.validateLottoNumbersLength(winningNumbers.length);
+    winningNumbers.forEach((number) => Validation.validateLottoNumberRange(number));
 
     if (this.#bonusNumber !== undefined)
-      LottoShop.#validateNoDuplicates([this.#bonusNumber, ...winningNumbers]);
+      Validation.validateUniqueNumbers([this.#bonusNumber, ...winningNumbers]);
 
     this.#winningNumbers = winningNumbers;
   }
 
   set bonusNumber(bonusNumber) {
-    LottoShop.#validateLottoNumberRange(bonusNumber);
+    Validation.validateLottoNumberRange(bonusNumber);
 
     if (this.#winningNumbers !== undefined)
-      LottoShop.#validateNoDuplicates([bonusNumber, ...this.#winningNumbers]);
+      Validation.validateUniqueNumbers([bonusNumber, ...this.#winningNumbers]);
 
     this.#bonusNumber = bonusNumber;
   }
@@ -65,8 +65,8 @@ class LottoShop {
   }
 
   evaluateLotto(lotto) {
-    LottoShop.#validateSoldLotto(lotto, this.#soldLottos);
-    LottoShop.#validateEvaluationReady(this.#winningNumbers, this.#bonusNumber);
+    Validation.validateLottoPurchased(lotto, this.#soldLottos);
+    Validation.validateLottoEvaluationPrerequisites(this.#winningNumbers, this.#bonusNumber);
 
     const matchCount = this.#calculateMatchCount(lotto.numbers);
     const bonusMatch = this.#calculateBonusMatch(lotto.numbers);
@@ -94,35 +94,6 @@ class LottoShop {
     if (matchCount === 4) return DEFAULT_VALUES.PRIZE.FOURTH;
     if (matchCount === 3) return DEFAULT_VALUES.PRIZE.FIFTH;
     return DEFAULT_VALUES.PRIZE.LAST_PLACE;
-  }
-
-  static #validateSoldLotto(lotto, soldLottos) {
-    if (!soldLottos.includes(lotto)) throw new Error(ERROR_MESSAGES.LOTTO.IS_NOT_SOLD);
-  }
-
-  static #validateEvaluationReady(winningNumbers, bonusNumber) {
-    if (winningNumbers === undefined || bonusNumber === undefined)
-      throw new Error(ERROR_MESSAGES.LOTTO.EVALUATION_NOT_READY);
-  }
-
-  static #validateLottoNumbersLength(length) {
-    if (length !== DEFAULT_VALUES.DOMAIN.LOTTO_NUMBER_COUNT)
-      throw new Error(ERROR_MESSAGES.LOTTO.WINNING_NUMBERS_LENGTH);
-  }
-
-  static #validateLottoNumberRange(number) {
-    if (
-      number < DEFAULT_VALUES.DOMAIN.MIN_LOTTO_VALUE ||
-      number > DEFAULT_VALUES.DOMAIN.MAX_LOTTO_VALUE
-    )
-      throw new Error(ERROR_MESSAGES.LOTTO.NUMBER_RANGE);
-  }
-
-  static #validateNoDuplicates(array) {
-    const unique = new Set(array);
-    if (unique.size !== array.length) {
-      throw new Error(ERROR_MESSAGES.LOTTO.DUPLICATE_NUMBERS);
-    }
   }
 }
 

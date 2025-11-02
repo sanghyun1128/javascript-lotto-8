@@ -1,5 +1,5 @@
 import DEFAULT_VALUES from '../consts/defaultValues.js';
-import ERROR_MESSAGES from '../consts/errorMessages.js';
+import Validation from '../utils/Validation.js';
 
 class Customer {
   #balance;
@@ -9,7 +9,7 @@ class Customer {
   #lottoResults;
 
   constructor(balance) {
-    Customer.#validateBalance(balance);
+    Validation.validateCustomerBalance(balance);
     this.#balance = balance;
     this.#ownedLottos = [];
     this.#lottoResults = {
@@ -56,7 +56,7 @@ class Customer {
   }
 
   calculateYield() {
-    Customer.#validateCalculateYieldReady(this.#ownedLottos, this.#lottoResults);
+    Validation.validateYieldCalculationPrerequisites(this.#ownedLottos, this.#lottoResults);
     const profit = Object.values(this.#lottoResults).reduce(
       (acc, result) => acc + result.prize * result.count,
       0,
@@ -66,31 +66,6 @@ class Customer {
     const yieldValue = (profit / cost) * 100;
     const factor = 10 ** DEFAULT_VALUES.FORMAT.ROUNDING_DECIMAL_PLACES;
     return Math.round(yieldValue * factor) / factor;
-  }
-
-  /**
-   * 잔액 유효성 검사
-   * - 음수인지 검사
-   * - 설정된 단위로 나누어떨어지는지 검사
-   *
-   * 유효하지 않은 경우 에러 메시지를 담은 Error를 던짐
-   *
-   * @param {number} balance - 검사할 잔액
-   * @throws {Error} 유효성 검사 실패 시
-   */
-  static #validateBalance(balance) {
-    if (balance < 0) throw new Error(ERROR_MESSAGES.BALANCE.MUST_POSITIVE);
-    if (balance % DEFAULT_VALUES.DOMAIN.BALANCE_UNIT !== 0)
-      throw new Error(ERROR_MESSAGES.BALANCE.MUST_MULTIPLE_OF_UNIT);
-  }
-
-  static #validateCalculateYieldReady(ownedLottos, lottoResults) {
-    const lottoCount = ownedLottos.length;
-    const resultCount = Object.values(lottoResults).reduce((acc, result) => acc + result.count, 0);
-
-    if (lottoCount === 0) throw new Error(ERROR_MESSAGES.LOTTO.NO_OWNED_LOTTO);
-    if (resultCount === 0) throw new Error(ERROR_MESSAGES.LOTTO.MUST_CHECK_RESULTS);
-    if (lottoCount !== resultCount) throw new Error(ERROR_MESSAGES.ETC.UNKNOWN);
   }
 }
 

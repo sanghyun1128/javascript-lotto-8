@@ -80,7 +80,7 @@ describe('당첨, 보너스 번호 저장 테스트', () => {
 
     expect(() => {
       shop.winningNumbers = winningNumbers;
-    }).toThrow(ERROR_MESSAGES.LOTTO.WINNING_NUMBERS_LENGTH);
+    }).toThrow(ERROR_MESSAGES.LOTTO.NUMBERS_LENGTH);
   });
 
   test('당첨번호의 갯수가 정확할 경우 정상 처리', () => {
