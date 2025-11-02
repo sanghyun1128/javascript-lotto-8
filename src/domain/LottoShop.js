@@ -1,8 +1,9 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 
 import Lotto from './Lotto.js';
-import DEFAULT_VALUES from '../consts/defaultValues.js';
 import Validation from '../utils/Validation.js';
+
+import DEFAULT_VALUES from '../consts/defaultValues.js';
 
 class LottoShop {
   #winningNumbers;
@@ -15,10 +16,6 @@ class LottoShop {
     this.#winningNumbers = undefined;
     this.#bonusNumber = undefined;
     this.#soldLottos = [];
-  }
-
-  get soldLottos() {
-    return this.#soldLottos;
   }
 
   set winningNumbers(winningNumbers) {
@@ -40,6 +37,10 @@ class LottoShop {
     this.#bonusNumber = bonusNumber;
   }
 
+  soldLottosCount() {
+    return this.#soldLottos.length;
+  }
+
   buyLotto(customer) {
     if (!customer.canAfford(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE)) return false;
 
@@ -47,21 +48,6 @@ class LottoShop {
     const newLotto = this.#makeLotto();
     customer.addLotto(newLotto);
     return true;
-  }
-
-  #makeLotto() {
-    const lottoNumbers = MissionUtils.Random.pickUniqueNumbersInRange(
-      DEFAULT_VALUES.DOMAIN.MIN_LOTTO_VALUE,
-      DEFAULT_VALUES.DOMAIN.MAX_LOTTO_VALUE,
-      DEFAULT_VALUES.DOMAIN.LOTTO_NUMBER_COUNT,
-    );
-
-    lottoNumbers.sort((a, b) => a - b);
-
-    const lotto = new Lotto(lottoNumbers);
-    this.#soldLottos.push(lotto);
-
-    return lotto;
   }
 
   evaluateLotto(lotto) {
@@ -77,6 +63,21 @@ class LottoShop {
       bonus: bonusMatch,
       prize,
     };
+  }
+
+  #makeLotto() {
+    const lottoNumbers = MissionUtils.Random.pickUniqueNumbersInRange(
+      DEFAULT_VALUES.DOMAIN.MIN_LOTTO_VALUE,
+      DEFAULT_VALUES.DOMAIN.MAX_LOTTO_VALUE,
+      DEFAULT_VALUES.DOMAIN.LOTTO_NUMBER_COUNT,
+    );
+
+    lottoNumbers.sort((a, b) => a - b);
+
+    const lotto = new Lotto(lottoNumbers);
+    this.#soldLottos.push(lotto);
+
+    return lotto;
   }
 
   static #calculatePrize(matchCount, bonusMatch) {
