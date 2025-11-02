@@ -2,6 +2,8 @@ import OutputManager from './ui/OutputManager.js';
 import InputManager from './ui/InputManager.js';
 import Customer from './domain/Customer.js';
 import LottoShop from './domain/LottoShop.js';
+
+import MESSAGES from './consts/messages.js';
 import DEFAULT_VALUES from './consts/defaultValues.js';
 
 class Controller {
@@ -15,8 +17,7 @@ class Controller {
   }
 
   async requestBalance() {
-    OutputManager.printRequestBalance();
-    const balance = await InputManager.getInteger();
+    const balance = await InputManager.getInteger(MESSAGES.REQUEST.BALANCE);
     OutputManager.printEmptyLine();
 
     this.#customer = new Customer(balance);
@@ -27,21 +28,19 @@ class Controller {
       this.#shop.buyLotto(this.#customer);
     }
 
-    OutputManager.printBoughtLottosCount(this.#customer.ownedLottosCount());
+    OutputManager.print(this.#customer.ownedLottosCountToString());
     OutputManager.print(this.#customer.ownedLottosToString());
   }
 
   async requestWinningNumbers() {
-    OutputManager.printRequestWinningNumbers();
-    const winningNumbers = await InputManager.getIntegerList();
+    const winningNumbers = await InputManager.getIntegerList(MESSAGES.REQUEST.WINNING_NUMBERS);
     OutputManager.printEmptyLine();
 
     this.#shop.winningNumbers = winningNumbers;
   }
 
   async requestBonusNumber() {
-    OutputManager.printRequestBonusNumber();
-    const bonusNumber = await InputManager.getInteger();
+    const bonusNumber = await InputManager.getInteger(MESSAGES.REQUEST.BONUS_NUMBER);
     OutputManager.printEmptyLine();
 
     this.#shop.bonusNumber = bonusNumber;
@@ -49,14 +48,16 @@ class Controller {
 
   checkResultsAndPrint() {
     this.#customer.checkLottoResults(this.#shop);
+    this.#customer.calculateYield();
 
-    OutputManager.printResultHeader();
+    OutputManager.print(MESSAGES.RESULT.HEADER);
+    OutputManager.print(MESSAGES.RESULT.SEPARATOR);
     OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FIFTH));
     OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FOURTH));
     OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.THIRD));
     OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.SECOND));
     OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FIRST));
-    OutputManager.printYield(this.#customer.calculateYield());
+    OutputManager.print(this.#customer.yieldValueToString());
   }
 }
 

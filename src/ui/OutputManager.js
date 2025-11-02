@@ -1,44 +1,10 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 
-import MESSAGES from '../consts/messages.js';
 import ERROR_MESSAGES from '../consts/errorMessages.js';
 
 class OutputManager {
   static print(message) {
     MissionUtils.Console.print(message);
-  }
-
-  static printRequestBalance() {
-    MissionUtils.Console.print(MESSAGES.REQUEST.BALANCE);
-  }
-
-  static printRequestWinningNumbers() {
-    MissionUtils.Console.print(MESSAGES.REQUEST.WINNING_NUMBERS);
-  }
-
-  static printRequestBonusNumber() {
-    MissionUtils.Console.print(MESSAGES.REQUEST.BONUS_NUMBER);
-  }
-
-  static printBoughtLottosCount(numOfLottos) {
-    MissionUtils.Console.print(MESSAGES.INFO.PURCHASE_COUNT(numOfLottos));
-  }
-
-  static printResultHeader() {
-    MissionUtils.Console.print(MESSAGES.RESULT.HEADER);
-    MissionUtils.Console.print(MESSAGES.RESULT.SEPARATOR);
-  }
-
-  static printResult(result) {
-    if (result.bonus)
-      MissionUtils.Console.print(
-        MESSAGES.RESULT.BONUS_RANK(result.match, result.prize, result.count),
-      );
-    else MissionUtils.Console.print(MESSAGES.RESULT.RANK(result.match, result.prize, result.count));
-  }
-
-  static printYield(yieldValue) {
-    MissionUtils.Console.print(MESSAGES.INFO.YIELD(yieldValue));
   }
 
   static printEmptyLine() {
