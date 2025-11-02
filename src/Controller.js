@@ -17,6 +17,7 @@ class Controller {
   async requestBalance() {
     OutputManager.printRequestBalance();
     const balance = await InputManager.getInteger();
+    OutputManager.printEmptyLine();
 
     this.#customer = new Customer(balance);
   }
@@ -26,23 +27,22 @@ class Controller {
       this.#shop.buyLotto(this.#customer);
     }
 
-    OutputManager.printEmptyLine();
     OutputManager.printBoughtLottosCount(this.#customer.ownedLottosCount());
     OutputManager.print(this.#customer.ownedLottosToString());
   }
 
   async requestWinningNumbers() {
-    OutputManager.printEmptyLine();
     OutputManager.printRequestWinningNumbers();
     const winningNumbers = await InputManager.getIntegerList();
+    OutputManager.printEmptyLine();
 
     this.#shop.winningNumbers = winningNumbers;
   }
 
   async requestBonusNumber() {
-    OutputManager.printEmptyLine();
     OutputManager.printRequestBonusNumber();
     const bonusNumber = await InputManager.getInteger();
+    OutputManager.printEmptyLine();
 
     this.#shop.bonusNumber = bonusNumber;
   }
@@ -50,7 +50,6 @@ class Controller {
   checkResultsAndPrint() {
     this.#customer.checkLottoResults(this.#shop);
 
-    OutputManager.printEmptyLine();
     OutputManager.printResultHeader();
     OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FIFTH));
     OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FOURTH));
