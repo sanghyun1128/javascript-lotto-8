@@ -1,18 +1,18 @@
-# javascript-lotto-precourse
+## javascript-lotto-precourse
 
-## 구현할 기능 목록
+### 구현할 기능 목록
 
-> ### 고객 (Customer)
+> ### 👤 고객 (Customer)
 >
 > - 보유 금액 저장
 >   - 양수인지 확인
 >   - 1000원 단위 확인
 > - 당첨 내역을 순위 별로 저장
-> - 저장된 당첨 내역을 바탕으로 수익률 계산
+> - 저장된 당첨 내역을 바탕으로 수익률 계산해 저장
 >
 > [Customer.js](src/domain/Customer.js), [CustomerTest.js](__tests__/domain/CustomerTest.js)
 
-> ### 로또 상점 (LottoShop)
+> ### 🏪 로또 상점 (LottoShop)
 >
 > - 로또 발행
 >   - 랜덤 값 오름차순 정렬해서 발행
@@ -29,17 +29,17 @@
 >
 > [LottoShop.js](src/domain/LottoShop.js), [LottoShopTest.js](__tests__/domain/LottoShopTest.js)
 
-> ### 로또 (Lotto)
+> ### 🎫 로또 (Lotto)
 >
 > - 로또 발행
 >   - 로또 번호가 6개 들어 왔는지 확인
 >   - 중복이 없는지 확인
 >   - 숫자 범위 안에 있는지 확인
->   - 정렬이 되어 있는지 확인
+>   - 오름차순 정렬이 되어 있는지 확인
 >
 > [Lotto.js](src/domain/Lotto.js), [LottoTest.js](__tests__/domain/LottoTest.js)
 
-> ### 입력/출력 (UI)
+> ### 💻 입력/출력 (UI)
 >
 > - 유저한테 정수형 입력 받기
 >   - 숫자로 변환 가능한지 확인
@@ -52,12 +52,16 @@
 >
 > [InputManager.js](src/ui/InputManager.js), [OutputManager.js](src/ui/OutputManager.js), [messages.js](src/consts/messages.js), [errorMessages.js](src/consts/errorMessages.js)
 
-> ### 컨트롤러
+> ### 🎮 컨트롤러
 >
 > - 프로그램 실행 흐름 컨트롤러 구현
 >
 > [Controller.js](src/Controller.js), [App.js](src/App.js), [ApplicationTest.js](__tests__/ApplicationTest.js)
 
-> ### 기타
+> ### 🔧 기타
 >
 > - 리펙토링
+>   - 검증 로직을 별도 유틸리티로 분리
+>   - 클래스별 private 필드 접근 제한
+>   - 결과 기록 객체 상수로 분리
+>   - 출력 메서드들을 하나의 메서드로 통합
