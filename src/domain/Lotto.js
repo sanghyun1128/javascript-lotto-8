@@ -1,4 +1,5 @@
 import Validation from '../utils/Validation.js';
+
 import MESSAGES from '../consts/messages.js';
 
 class Lotto {
