@@ -10,11 +10,14 @@ class Customer {
 
   #lottoResults;
 
+  #yieldValue;
+
   constructor(balance) {
     Validation.validateCustomerBalance(balance);
     this.#balance = balance;
     this.#ownedLottos = [];
     this.#lottoResults = DEFAULT_VALUES.LOTTO_RESULTS_INITIALIZER;
+    this.#yieldValue = 0;
   }
 
   addLotto(lotto) {
@@ -50,10 +53,12 @@ class Customer {
       0,
     );
     const cost = this.#ownedLottos.length * DEFAULT_VALUES.DOMAIN.LOTTO_PRICE;
-
     const yieldValue = (profit / cost) * 100;
+
     const factor = 10 ** DEFAULT_VALUES.FORMAT.ROUNDING_DECIMAL_PLACES;
-    return Math.round(yieldValue * factor) / factor;
+    this.#yieldValue = Math.round(yieldValue * factor) / factor;
+
+    return this.#yieldValue;
   }
 
   ownedLottosToString() {
@@ -66,6 +71,10 @@ class Customer {
     return string;
   }
 
+  ownedLottosCountToString() {
+    return MESSAGES.INFO.PURCHASE_COUNT(this.ownedLottosCount());
+  }
+
   lottoResultToString(rank) {
     const result = this.#lottoResults[rank];
     if (!result) return '';
@@ -73,6 +82,10 @@ class Customer {
       return MESSAGES.RESULT.BONUS_RANK(result.match, result.prize, result.count);
     }
     return MESSAGES.RESULT.RANK(result.match, result.prize, result.count);
+  }
+
+  yieldValueToString() {
+    return MESSAGES.INFO.YIELD(this.#yieldValue);
   }
 
   /**
