@@ -41,10 +41,10 @@ class LottoShop {
   }
 
   buyLotto(customer) {
-    if (customer.balance < DEFAULT_VALUES.DOMAIN.LOTTO_PRICE) return false;
+    if (!customer.canAfford(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE)) return false;
 
+    customer.purchase(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
     const newLotto = this.#makeLotto();
-    customer.payMoney(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE);
     customer.addLotto(newLotto);
     return true;
   }

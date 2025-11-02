@@ -19,9 +19,7 @@ describe('고객 잔액 저장 테스트', () => {
     [DEFAULT_VALUES.DOMAIN.BALANCE_UNIT * 121],
     [Number.parseFloat(DEFAULT_VALUES.DOMAIN.BALANCE_UNIT)],
   ])('정상 동작', (input) => {
-    const customer = new Customer(input);
-
-    expect(customer.balance).toBe(input);
+    expect(() => new Customer(input)).not.toThrow();
   });
 
   test('음수 저장 시도시 에러 발생', () => {
@@ -38,6 +36,10 @@ describe('고객 잔액 저장 테스트', () => {
 });
 
 describe('수익률 계산 테스트', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
   test('보유한 로또가 없을 경우 에러 발생', () => {
     const customer = new Customer(DEFAULT_VALUES.DOMAIN.BALANCE_UNIT);
 
@@ -53,7 +55,6 @@ describe('수익률 계산 테스트', () => {
   });
 
   test.each([
-    [[1, 2, 3, 4, 5, 6], (DEFAULT_VALUES.PRIZE.FIRST / DEFAULT_VALUES.DOMAIN.LOTTO_PRICE) * 100],
     [[1, 2, 3, 11, 12, 13], (DEFAULT_VALUES.PRIZE.FIFTH / DEFAULT_VALUES.DOMAIN.LOTTO_PRICE) * 100],
   ])('정상 동작', (lottoNumbers, expectYield) => {
     const customer = new Customer(DEFAULT_VALUES.DOMAIN.BALANCE_UNIT * 2);

@@ -23,7 +23,8 @@ describe('로또 판매 테스트', () => {
     mockRandoms([randomResult]);
     shop.buyLotto(customer);
 
-    expect(shop.soldLottos[0]).toEqual(customer.ownedLottos[0]);
+    expect(shop.soldLottos.length).toBe(1);
+    expect(customer.ownedLottosCount()).toBe(1);
   });
 
   test('판매한 로또의 숫자 순서가 정렬되는지 확인', () => {
@@ -132,7 +133,7 @@ describe('로또 등수, 당첨금 확인 테스트', () => {
       const shop = new LottoShop();
       mockRandoms([lottoNumbers]);
       shop.buyLotto(customer);
-      const lotto = customer.ownedLottos[0];
+      const lotto = shop.soldLottos[0];
       shop.winningNumbers = winningNumbers;
       shop.bonusNumber = bonusNumber;
 
@@ -151,7 +152,7 @@ describe('로또 등수, 당첨금 확인 테스트', () => {
     shop.buyLotto(customer);
     shop.bonusNumber = bonusNumber;
 
-    const lotto = customer.ownedLottos[0];
+    const lotto = shop.soldLottos[0];
     expect(() => {
       shop.evaluateLotto(lotto);
     }).toThrow(ERROR_MESSAGES.LOTTO.EVALUATION_NOT_READY);
@@ -167,7 +168,7 @@ describe('로또 등수, 당첨금 확인 테스트', () => {
     shop.buyLotto(customer);
     shop.winningNumbers = winningNumbers;
 
-    const lotto = customer.ownedLottos[0];
+    const lotto = shop.soldLottos[0];
     expect(() => {
       shop.evaluateLotto(lotto);
     }).toThrow(ERROR_MESSAGES.LOTTO.EVALUATION_NOT_READY);

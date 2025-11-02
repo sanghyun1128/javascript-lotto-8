@@ -2,6 +2,7 @@ import OutputManager from './ui/OutputManager.js';
 import InputManager from './ui/InputManager.js';
 import Customer from './domain/Customer.js';
 import LottoShop from './domain/LottoShop.js';
+import DEFAULT_VALUES from './consts/defaultValues.js';
 
 class Controller {
   #customer;
@@ -21,13 +22,13 @@ class Controller {
   }
 
   buyLottosAndPrint() {
-    while (this.#customer.balance > 0) {
+    while (this.#customer.canAfford(DEFAULT_VALUES.DOMAIN.LOTTO_PRICE)) {
       this.#shop.buyLotto(this.#customer);
     }
 
     OutputManager.printEmptyLine();
-    OutputManager.printBoughtLottosCount(this.#customer.ownedLottos.length);
-    this.#customer.ownedLottos.forEach((lotto) => OutputManager.print(lotto.numbersToString()));
+    OutputManager.printBoughtLottosCount(this.#customer.ownedLottosCount());
+    OutputManager.print(this.#customer.ownedLottosToString());
   }
 
   async requestWinningNumbers() {
@@ -51,11 +52,11 @@ class Controller {
 
     OutputManager.printEmptyLine();
     OutputManager.printResultHeader();
-    OutputManager.printResult(this.#customer.lottoResults.fifth);
-    OutputManager.printResult(this.#customer.lottoResults.fourth);
-    OutputManager.printResult(this.#customer.lottoResults.third);
-    OutputManager.printResult(this.#customer.lottoResults.second);
-    OutputManager.printResult(this.#customer.lottoResults.first);
+    OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FIFTH));
+    OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FOURTH));
+    OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.THIRD));
+    OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.SECOND));
+    OutputManager.print(this.#customer.lottoResultToString(DEFAULT_VALUES.RANK.FIRST));
     OutputManager.printYield(this.#customer.calculateYield());
   }
 }
