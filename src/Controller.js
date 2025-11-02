@@ -27,7 +27,7 @@ class Controller {
 
     OutputManager.printEmptyLine();
     OutputManager.printBoughtLottosCount(this.#customer.ownedLottos.length);
-    this.#customer.ownedLottos.forEach((lotto) => OutputManager.printLottoNumbers(lotto.numbers));
+    this.#customer.ownedLottos.forEach((lotto) => OutputManager.print(lotto.numbersToString()));
   }
 
   async requestWinningNumbers() {

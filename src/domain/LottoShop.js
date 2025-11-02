@@ -68,8 +68,8 @@ class LottoShop {
     Validation.validateLottoPurchased(lotto, this.#soldLottos);
     Validation.validateLottoEvaluationPrerequisites(this.#winningNumbers, this.#bonusNumber);
 
-    const matchCount = this.#calculateMatchCount(lotto.numbers);
-    const bonusMatch = this.#calculateBonusMatch(lotto.numbers);
+    const matchCount = lotto.calculateMatchCount(this.#winningNumbers);
+    const bonusMatch = lotto.calculateBonusMatch(this.#bonusNumber);
     const prize = LottoShop.#calculatePrize(matchCount, bonusMatch);
 
     return {
@@ -77,14 +77,6 @@ class LottoShop {
       bonus: bonusMatch,
       prize,
     };
-  }
-
-  #calculateMatchCount(lottoNumbers) {
-    return lottoNumbers.filter((n) => this.#winningNumbers.includes(n)).length;
-  }
-
-  #calculateBonusMatch(lottoNumbers) {
-    return lottoNumbers.includes(this.#bonusNumber);
   }
 
   static #calculatePrize(matchCount, bonusMatch) {

@@ -4,6 +4,10 @@ import MESSAGES from '../consts/messages.js';
 import ERROR_MESSAGES from '../consts/errorMessages.js';
 
 class OutputManager {
+  static print(message) {
+    MissionUtils.Console.print(message);
+  }
+
   static printRequestBalance() {
     MissionUtils.Console.print(MESSAGES.REQUEST.BALANCE);
   }
@@ -18,12 +22,6 @@ class OutputManager {
 
   static printBoughtLottosCount(numOfLottos) {
     MissionUtils.Console.print(MESSAGES.INFO.PURCHASE_COUNT(numOfLottos));
-  }
-
-  static printLottoNumbers(lottoNumbers) {
-    MissionUtils.Console.print(
-      `${MESSAGES.SYMBOLS.LEFT_BRACKET}${lottoNumbers.join(MESSAGES.SYMBOLS.ITEM_SEPARATOR)}${MESSAGES.SYMBOLS.RIGHT_BRACKET}`,
-    );
   }
 
   static printResultHeader() {
